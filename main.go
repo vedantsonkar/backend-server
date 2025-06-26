@@ -17,8 +17,9 @@ func main() {
 		log.Println("No .env file found, using environment vars")
 	}
 
-	r := gin.Default()
 	config.LoadAWSConfig()
+	
+	r := gin.Default()
 	routes.SetupRoutes(r)
 
 	port := os.Getenv("PORT")
