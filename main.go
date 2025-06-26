@@ -1,22 +1,15 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"backend-server/config"
 	"backend-server/routes"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("No .env file found, using environment vars")
-	}
-
 	config.LoadAWSConfig()
 	
 	r := gin.Default()

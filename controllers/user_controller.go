@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -37,6 +38,10 @@ func CreateUserHandler(c *gin.Context) {
 	}
 
 	if err != nil {
+		if errors.Is(err, services.ErrEmailAlreadyExists) {
+			utils.JSONWithOptionalDebug(c, http.StatusConflict, gin.H{"error": err.Error()})
+			return
+		}
 		utils.JSONWithOptionalDebug(c, http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

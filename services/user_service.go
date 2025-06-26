@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 
@@ -15,8 +16,19 @@ import (
 
 const TableName = "Users"
 
+var ErrEmailAlreadyExists = errors.New("email already in use")
+
 // CreateUser adds a new user to the Users table
 func CreateUser(userID, email, name string) error {
+
+	var err error
+	var existingUser map[string]types.AttributeValue
+
+	existingUser, err = GetUser(email)
+	if err == nil && existingUser != nil {
+		return ErrEmailAlreadyExists
+	}
+
 	input := &dynamodb.PutItemInput{
 		TableName: aws.String(TableName),
 		Item: map[string]types.AttributeValue{
@@ -26,7 +38,7 @@ func CreateUser(userID, email, name string) error {
 		},
 		ConditionExpression: aws.String("attribute_not_exists(UserID)"),
 	}
-	_, err := utils.PutItemWithTimestamps(config.DynamoClient, input)
+	_, err = utils.PutItemWithTimestamps(config.DynamoClient, input)
 	if err != nil {
 		return fmt.Errorf("CreateUser failed (region: %s): %w", os.Getenv("AWS_REGION"), err)
 	}
