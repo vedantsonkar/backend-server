@@ -1,0 +1,23 @@
+# Binaries
+/backend-server
+*.exe
+*.out
+*.test
+
+# Dependency directories
+vendor/
+
+# Environment variables
+.env
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Go cache
+*.log
