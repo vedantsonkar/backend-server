@@ -14,7 +14,7 @@ func LatencyHandler(c *gin.Context) {
 	time.Sleep(10 * time.Millisecond)
 	compute := time.Since(start)
 
-	utils.JSON(c, http.StatusOK, gin.H{
+	utils.JSONWithOptionalDebug(c, http.StatusOK, gin.H{
 		"compute_time_ms":  compute.Milliseconds(),
 		"response_time_ms": compute.Milliseconds(),
 		"expected_latency": "network latency + server compute time",

@@ -8,10 +8,23 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine) {
-	// Open route with rate limiting
-	r.GET("/api/latency", middleware.RateLimitMiddleware(), controllers.LatencyHandler)
+	// Public endpoints
+	public := r.Group("/api")
+	public.Use(middleware.RateLimitMiddleware(), middleware.DebugTiming())
+	{
+		public.GET("/latency", controllers.LatencyHandler)
+		public.POST("/users", controllers.CreateUserHandler) // ✅ no JWT needed
+	}
 
-	// Secure group (JWT auth)
+	// Secure endpoints
+	secure := r.Group("/api")
+	secure.Use(middleware.RateLimitMiddleware(), middleware.DebugTiming(), middleware.AuthMiddleware())
+	{
+		secure.PUT("/users", controllers.UpdateUserHandler)
+		secure.DELETE("/users", controllers.DeleteUserHandler)
+	}
+	
+	// Optionally, keep /api/secure if needed
 	authGroup := r.Group("/api/secure")
 	authGroup.Use(middleware.RateLimitMiddleware(), middleware.AuthMiddleware())
 	{

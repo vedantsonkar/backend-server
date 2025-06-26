@@ -5,10 +5,15 @@ import (
 	"log"
 	"os"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-var Cfg config.Config
+var (
+	Cfg           aws.Config
+	DynamoClient  *dynamodb.Client
+)
 
 func LoadAWSConfig() {
 	awsRegion := os.Getenv("AWS_REGION")
@@ -17,4 +22,6 @@ func LoadAWSConfig() {
 		log.Fatalf("Unable to load AWS config: %v", err)
 	}
 	Cfg = c
+
+	DynamoClient = dynamodb.NewFromConfig(Cfg)
 }
