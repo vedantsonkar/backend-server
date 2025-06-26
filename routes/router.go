@@ -23,13 +23,4 @@ func SetupRoutes(r *gin.Engine) {
 		secure.PUT("/users", controllers.UpdateUserHandler)
 		secure.DELETE("/users", controllers.DeleteUserHandler)
 	}
-	
-	// Optionally, keep /api/secure if needed
-	authGroup := r.Group("/api/secure")
-	authGroup.Use(middleware.RateLimitMiddleware(), middleware.AuthMiddleware())
-	{
-		authGroup.GET("/protected", func(c *gin.Context) {
-			c.JSON(200, gin.H{"message": "You are authenticated"})
-		})
-	}
 }
