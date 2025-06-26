@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"backend-server/config"
 	"backend-server/utils"
@@ -27,7 +28,7 @@ func CreateUser(userID, email, name string) error {
 	}
 	_, err := utils.PutItemWithTimestamps(config.DynamoClient, input)
 	if err != nil {
-		return fmt.Errorf("CreateUser failed: %w", err)
+		return fmt.Errorf("CreateUser failed (region: %s): %w", os.Getenv("AWS_REGION"), err)
 	}
 	return nil
 }
